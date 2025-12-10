@@ -1,7 +1,7 @@
 {
   "name": "resfetch",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "packageManager": "bun@1.3.4",
   "description": "A tiny, type-safe fetch wrapper with Standard Schema validation, Result pattern, and zero dependencies",
   "license": "MIT",
