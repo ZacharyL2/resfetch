@@ -5,6 +5,14 @@
   "packageManager": "bun@1.3.4",
   "description": "A tiny, type-safe fetch wrapper with Standard Schema validation, Result pattern, and zero dependencies",
   "license": "MIT",
+  "homepage": "https://github.com/ZacharyL2/resfetch",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZacharyL2/resfetch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZacharyL2/resfetch/issues"
+  },
   "keywords": [
     "fetch",
     "http",
