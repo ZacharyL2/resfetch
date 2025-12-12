@@ -56,6 +56,10 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 export function isSerializable(value: unknown): value is SerializableObject | SerializableArray {
+  if (value instanceof FormData) {
+    return false;
+  }
+
   return isPlainObject(value) ||
     Array.isArray(value) ||
     (typeof value === 'object' &&
