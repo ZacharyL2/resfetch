@@ -68,14 +68,18 @@ export function enhance<
     // - If body is undefined/null, don't set Content-Type
     // - If original body is FormData, let browser set Content-Type with correct boundary
     // - Otherwise, set application/json for serializable objects
+    // - Set Content-Length for string bodies (required by some servers)
     options.headers = mergeHeaders([
-      options.body === undefined ||
-      options.body === null ||
-      originalBody instanceof FormData
-        ? {}
-        : isSerializable(originalBody) && typeof options.body === 'string'
-          ? { 'content-type': 'application/json' }
-          : {},
+      (() => {
+        if (isSerializable(originalBody) && typeof options.body === 'string') {
+          return {
+            'content-type': 'application/json',
+            'content-length': String(new TextEncoder().encode(options.body).length),
+          };
+        }
+
+        return {};
+      })(),
       defaultOpts.headers,
       fetcherOpts?.headers,
     ]);
