@@ -11,6 +11,7 @@ import type {
 import { fallbackOptions } from './fallback-options';
 import {
   abortableDelay,
+  isNil,
   isSerializable,
   mergeHeaders,
   omit,
@@ -59,10 +60,9 @@ export function enhance<
     // Store original body for Content-Type detection
     const originalBody = fetcherOpts?.body;
 
-    options.body =
-      originalBody === null || originalBody === undefined
-        ? originalBody
-        : options.serializeBody(originalBody);
+    options.body = isNil(originalBody)
+      ? originalBody
+      : options.serializeBody(originalBody);
 
     // Set Content-Type header based on body type
     // - If body is undefined/null, don't set Content-Type
