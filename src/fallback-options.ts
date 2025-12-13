@@ -1,6 +1,6 @@
 import type { DefaultRawBody, FallbackOptions } from './types';
 import { ResponseError } from './errors';
-import { isSerializable } from './utils';
+import { isNil, isSerializable } from './utils';
 
 export const fallbackOptions: FallbackOptions = {
   parseResponse: async (res) => {
@@ -24,12 +24,32 @@ export const fallbackOptions: FallbackOptions = {
       request,
     }),
 
-  // TODO: find a lighter way to do this with about the same amount of code
-  serializeParams: params =>
-    // JSON.parse(JSON.stringify(params)) recursively transforms Dates to ISO strings and strips undefined
-    new URLSearchParams(
-      JSON.parse(JSON.stringify(params)) as Record<string, string>,
-    ).toString(),
+  serializeParams: (params) => {
+    const searchParams = new URLSearchParams();
+
+    const append = (key: string, value: unknown): void => {
+      if (isNil(value)) {
+        return;
+      }
+      if (value instanceof Date) {
+        searchParams.append(key, value.toISOString());
+      } else {
+        searchParams.append(key, String(value));
+      }
+    };
+
+    for (const [key, value] of Object.entries(params)) {
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          append(key, item);
+        }
+      } else {
+        append(key, value);
+      }
+    }
+
+    return searchParams.toString();
+  },
 
   serializeBody: (body: DefaultRawBody): BodyInit =>
     // FormData should be passed through without serialization

@@ -11,6 +11,10 @@ import type {
 } from './types';
 import { ValidationError } from './errors';
 
+export function isNil(value: unknown): value is null | undefined {
+  return value === null || value === undefined;
+}
+
 export function mergeHeaders(headerInits: (HeadersInit | HeadersObject | undefined)[]) {
   const res: Record<string, string> = {};
   headerInits.forEach((init) => {
@@ -129,7 +133,7 @@ export function replacePathParams(path: string, params?: unknown): string {
   let newPath = path;
   // We iterate over the params to replace occurrences in the path
   for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null) {
+    if (isNil(value)) {
       continue;
     }
     // Replace :key with value
